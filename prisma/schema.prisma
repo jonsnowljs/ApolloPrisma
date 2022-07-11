@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type ProductsPriceLists {
+  id       String   @map("_id") @db.ObjectId
+  postDate DateTime @db.Date
+  /// Multiple data types found: Float: 93.3%, Int: 6.7% out of 15 sampled entries
+  price    Float
+}
+
+type ProductsSize {
+  height Int
+  length Int
+  radius Int
+  width  Int
+}
+
+model addresses {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  address   String
+  apartment String
+  category  String
+  city      String
+  country   String
+  createdAt DateTime @db.Date
+  firstName String
+  lastName  String
+  phone1    String
+  phone2    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  state     Json?
+  updatedAt DateTime @db.Date
+  zipcode   String?
+}
+
+model creditcards {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  v              Int      @map("__v")
+  cardNo         Float
+  expirationDate DateTime @db.Date
+  holderName     String
+}
+
+model customers {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int      @map("__v")
+  addressIds    String[] @db.ObjectId
+  creditCardIds String[] @db.ObjectId
+  email         String
+  firstName     String
+  lastName      String
+  orderIds      String[] @db.ObjectId
+  password      String
+  paypalId      String
+  phone         String
+  role          String
+  status        String
+  wechatId      String
+}
+
+model deliveries {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int    @map("__v")
+  deliveryCompany String
+  deliveryType    String
+  traceNo         String
+}
+
+model images {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int    @map("__v")
+  category  String
+  format    String
+  imageLink String
+  length    Int
+  name      String
+  size      Int
+  width     Int
+}
+
+model orders {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  v                 Int      @map("__v")
+  billingAddressId  String   @db.ObjectId
+  customerId        String   @db.ObjectId
+  deliveryId        String   @db.ObjectId
+  orderDate         DateTime @db.Date
+  orderStatus       String
+  paymentId         String   @db.ObjectId
+  productsInCartIds String[] @db.ObjectId
+  shippingAddressId String   @db.ObjectId
+}
+
+model payments {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  amount      Int
+  date        DateTime @db.Date
+  method      String
+  payMethodId String
+  status      String
+}
+
+model productincarts {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int    @map("__v")
+  price     Int
+  productId String @db.ObjectId
+  qty       Int
+}
+
+model products {
+  id            String               @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int                  @map("__v")
+  category      String
+  colors        String[]
+  createdAt     DateTime             @db.Date
+  description   String
+  imageIds      String[]             @db.ObjectId
+  name          String
+  postDate      DateTime             @db.Date
+  priceLists    ProductsPriceLists[]
+  productStatus String
+  rare          Boolean
+  reviewIds     String[]             @db.ObjectId
+  size          ProductsSize
+  stockIds      String[]             @db.ObjectId
+  updatedAt     DateTime             @db.Date
+}
+
+model reviews {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  createdAt   DateTime @db.Date
+  customerId  String   @db.ObjectId
+  description String
+  postDate    DateTime @db.Date
+  stars       Int
+  title       String
+  updatedAt   DateTime @db.Date
+}
+
+model stocks {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  v            Int      @map("__v")
+  action       String
+  actionAmount Int
+  actionDate   DateTime @db.Date
+  actionPrice  Float
+  createdAt    DateTime @db.Date
+  productId    String   @db.ObjectId
+  total        Int
+  updatedAt    DateTime @db.Date
+}
+
+model users {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  email Json?  @unique(map: "email_1")
+}
